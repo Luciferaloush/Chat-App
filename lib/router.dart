@@ -1,3 +1,4 @@
+import 'package:chatappclone/screen/camera/camera_screen.dart';
 import 'package:chatappclone/screen/contact/contact_screen.dart';
 import 'package:chatappclone/screen/individual_screen/individual_page.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const CreateGroupScreen(),
+      );
+    case CameraScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const CameraScreen(),
       );
 
     default:

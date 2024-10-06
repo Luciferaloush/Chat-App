@@ -20,4 +20,7 @@ class AppStyle{
       fontSize: 12,
     color: Colors.grey
   );
+  static TextStyle textCamera =  TextStyle(
+      color: ColorApp.whiteColor,
+  );
 }

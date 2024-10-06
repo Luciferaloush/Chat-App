@@ -1,4 +1,6 @@
 import 'package:chatappclone/home_screen/cubit/home_screen_cubit.dart';
+import 'package:chatappclone/screen/camera/camera_screen.dart';
+import 'package:chatappclone/screen/camera/cubit/camera_cubit.dart';
 import 'package:chatappclone/screen/chat_page/chat_page.dart';
 import 'package:chatappclone/utils/AppStyle.dart';
 import 'package:chatappclone/utils/color.dart';
@@ -32,7 +34,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: cubit,
-      child: BlocConsumer<HomeScreenCubit, HomeScreenState>(
+      child: MultiBlocProvider(
+  providers: [
+    BlocProvider(
+  create: (context) => CameraCubit(),
+),
+
+  ],
+  child: BlocConsumer<HomeScreenCubit, HomeScreenState>(
         listener: (context, state) {
           // TODO: implement listener
         },
@@ -87,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             body: TabBarView(
               controller: cubit.controller,
               children: const [
-                Center(child: Text('Camera')),
+               CameraScreen(),
                 ChatPage(),
                 Center(child: Text('Status')),
                 Center(child: Text('Calls')),
@@ -96,6 +105,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           );
         },
       ),
+),
     );
   }
 }

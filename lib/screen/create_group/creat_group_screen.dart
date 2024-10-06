@@ -132,7 +132,7 @@ class CreateGroupScreen extends StatelessWidget {
                           },
                         ),
                       ),
-                      Divider(
+                      const Divider(
                         thickness: 1,
                       )
                     ],

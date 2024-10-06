@@ -1,9 +1,13 @@
+import 'package:camera/camera.dart';
 import 'package:chatappclone/home_screen/home_screen.dart';
 import 'package:chatappclone/router.dart';
 import 'package:chatappclone/utils/color.dart';
+import 'package:chatappclone/utils/constant.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async{
+   WidgetsFlutterBinding.ensureInitialized();
+   Constants.cameras = await availableCameras();
   runApp(const MyApp());
 }
 
