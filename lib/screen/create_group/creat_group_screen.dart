@@ -1,6 +1,7 @@
 import 'package:chatappclone/screen/create_group/cubit/create_group_cubit.dart';
 import 'package:chatappclone/utils/AppStyle.dart';
 import 'package:chatappclone/utils/color.dart';
+import 'package:chatappclone/widgets/avatar_card_group.dart';
 import 'package:chatappclone/widgets/contact_card.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -44,11 +45,13 @@ class CreateGroupScreen extends StatelessWidget {
                 color: ColorApp.whiteColor,
               )),
           actions: [
-            IconButton(onPressed: () {
-
-            },
-                icon: Icon(Icons.search_outlined, size: 26,
-                  color: ColorApp.whiteColor,)),
+            IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.search_outlined,
+                  size: 26,
+                  color: ColorApp.whiteColor,
+                )),
             PopupMenuButton<String>(
               onSelected: (value) {
                 if (kDebugMode) {
@@ -77,7 +80,6 @@ class CreateGroupScreen extends StatelessWidget {
                 ];
               },
             )
-
           ],
         ),
         body: BlocProvider(
@@ -88,21 +90,57 @@ class CreateGroupScreen extends StatelessWidget {
             },
             builder: (context, state) {
               CreateGroupCubit cubit = CreateGroupCubit.get(context);
-              return ListView.builder(
-                itemCount: cubit.contacts.length,
-                itemBuilder: (context, index) {
-                  final contact =  cubit.contacts[index];
-                  return InkWell(
-                      onTap: () {
-                       cubit.setStateSelect(index);
-                      },
-                      child: ContactCard(chat:contact ));
-                },
+              return Stack(
+                children: [
+                  ListView.builder(
+                    itemCount: cubit.contacts.length,
+                    itemBuilder: (context, index) {
+                      final contact = cubit.contacts[index];
+                      if(index == 0){
+                        return Container(
+                          height: cubit.groups.isNotEmpty ? 90 : 10,
+                        );
+                      }
+                      return InkWell(
+                          onTap: () {
+                            cubit.setStateSelect(index);
+                          },
+                          child: ContactCard(chat: contact));
+                    },
+                  ),
+                  cubit.groups.isNotEmpty ?
+                  Column(
+                    children: [
+                      Container(
+                        height: 75,
+                        color: ColorApp.whiteColor,
+                        child: ListView.builder(
+                          itemCount: cubit.contacts.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            final contact = cubit.contacts[index];
+                            if (contact.isSelect == true) {
+                              return InkWell(
+                                  onTap: () {
+                                    cubit.setStateSelect(cubit.contacts.indexOf(contact));
+
+                                  },
+                                  child: AvatarCardGroup(chat: contact));
+                            } else {
+                              return Container();
+                            }
+                          },
+                        ),
+                      ),
+                      Divider(
+                        thickness: 1,
+                      )
+                    ],
+                  ): Container()
+                ],
               );
             },
           ),
-        )
-
-    );
+        ));
   }
 }

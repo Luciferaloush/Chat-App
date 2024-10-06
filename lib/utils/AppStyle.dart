@@ -16,4 +16,8 @@ class AppStyle{
     fontSize: 17,
     fontWeight: FontWeight.bold
   );
+  static TextStyle subTitle = const TextStyle(
+      fontSize: 12,
+    color: Colors.grey
+  );
 }
