@@ -1,28 +1,33 @@
+import 'package:chatappclone/screen/individual_screen/individual_page.dart';
 import 'package:chatappclone/utils/AppStyle.dart';
 import 'package:chatappclone/utils/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../model/chat_model.dart';
+
 class CustomCard extends StatelessWidget {
-  const CustomCard({super.key});
+  const CustomCard({super.key, required this.chat});
+
+  final Chat chat;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-
+        Navigator.pushNamed(context, IndividualPage.routeName, arguments:chat);
       },
       child: Column(
         children: [
           ListTile(
-            leading:  CircleAvatar(
+            leading: CircleAvatar(
               radius: 30,
-              child: SvgPicture.asset("assets/svg_icon/person_36dp_000000.svg",height: 37,width: 37),
               backgroundColor: ColorApp.circleAvatar,
+              child: SvgPicture.asset(chat.icon, height: 37, width: 37),
             ),
-            trailing: const Text("18:-04"),
+            trailing: Text(chat.time),
             title: Text(
-              "Ali Habib",
+              chat.name,
               style: AppStyle.nameCustomCard,
             ),
             subtitle: Row(
@@ -32,15 +37,15 @@ class CustomCard extends StatelessWidget {
                   width: 3,
                 ),
                 Text(
-                  "hi Ali",
+                  chat.currentMessage,
                   style: AppStyle.nameCustomCard
                       .copyWith(fontSize: 13, fontWeight: FontWeight.normal),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0, left:80 ),
+          const Padding(
+            padding: EdgeInsets.only(right: 20.0, left: 80),
             child: Divider(
               thickness: 1,
             ),

@@ -1,4 +1,5 @@
 import 'package:chatappclone/home_screen/home_screen.dart';
+import 'package:chatappclone/router.dart';
 import 'package:chatappclone/utils/color.dart';
 import 'package:flutter/material.dart';
 
@@ -13,11 +14,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         primaryColor: ColorApp.primaryColor,
+          popupMenuTheme: const PopupMenuThemeData(
+            color: Colors.white,
+          ),
         useMaterial3: true,
         fontFamily: "OpenSans"
       ),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      onGenerateRoute: generateRoute,
+      initialRoute: '/',
+      home: const HomeScreen(),
     );
   }
 }

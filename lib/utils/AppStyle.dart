@@ -4,11 +4,16 @@ import 'package:flutter/material.dart';
 
 class AppStyle{
   static TextStyle appBarStyle = TextStyle(
-    fontSize: 16,
-    color: ColorApp.whiteColor
+    fontSize: 18,
+    color: ColorApp.whiteColor,
+    fontWeight: FontWeight.bold
   );
   static TextStyle nameCustomCard = const TextStyle(
     fontSize: 16,
+    fontWeight: FontWeight.bold
+  );
+  static TextStyle nameContact = const TextStyle(
+    fontSize: 17,
     fontWeight: FontWeight.bold
   );
 }

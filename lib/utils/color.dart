@@ -6,6 +6,8 @@ class ColorApp {
    static Color whiteColor = const Color(0xffFFFFFF);
    static Color unSelectedTabColor = const Color(0xffFFFFFF);
    static Color circleAvatar =  Colors.blueGrey;
+   static Color subtitle =  Colors.grey;
+
 
 
 }
