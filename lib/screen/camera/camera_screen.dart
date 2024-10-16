@@ -34,12 +34,19 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CameraCubit, CameraState>(
+    return BlocConsumer<CameraCubit, CameraState>(
+      listener: (context, state) {
+
+      },
       builder: (context, state) {
+        CameraCubit cubit = CameraCubit.get(context);
         if (state is OpenCamera) {
           return Stack(
             children: [
-              CameraPreview(cameraCubit.cameraController!),
+              SizedBox(
+                  width: context.screenSize.width,
+                  height: context.screenSize.height,
+                  child: CameraPreview(cameraCubit.cameraController!)),
               Positioned(
                 bottom: 0.0,
                 child: Padding(
@@ -54,21 +61,35 @@ class _CameraScreenState extends State<CameraScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  cubit.toggleFlash();
+                                },
                                 icon: Icon(
-                                  Icons.flash_off,
+                                  cubit.flash ? Icons.flash_on : Icons.flash_off,
                                   size: 26,
                                   color: ColorApp.whiteColor,
                                 )),
-                           InkWell(
-                             onTap: () {
-
+                           GestureDetector(
+                             onLongPress: () async{
+                               await cubit.recordVideo(context);
                              },
-                             child: Icon(
+                             onLongPressUp: () async{
+                               await cubit.stopRecording(context);
+                             },
+                             onTap: () {
+                               if(!cubit.isRecording) {
+                                    cubit.takePhoto(context);
+                                  }
+                                },
+                             child: cubit.isRecording ? Icon(
+                               Icons.radio_button_on,
+                               size: 70,
+                               color: ColorApp.whiteColor,
+                             ) : Icon(
                                Icons.panorama_fish_eye,
                                size: 70,
                                  color: ColorApp.whiteColor,
-                             ),
+                             )
                            ),
                             IconButton(
                                 onPressed: () {},
@@ -102,4 +123,5 @@ class _CameraScreenState extends State<CameraScreen> {
       },
     );
   }
+
 }

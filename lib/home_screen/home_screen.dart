@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
+   static const String routeName = '/';
   const HomeScreen({super.key});
 
   @override
@@ -32,14 +33,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: cubit,
-      child: MultiBlocProvider(
+    return MultiBlocProvider(
   providers: [
-    BlocProvider(
-  create: (context) => CameraCubit(),
+    BlocProvider.value(
+      value: cubit,
 ),
-
+    BlocProvider(
+      create: (context) => CameraCubit(),
+    ),
   ],
   child: BlocConsumer<HomeScreenCubit, HomeScreenState>(
         listener: (context, state) {
@@ -67,18 +68,18 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   },
                   color: ColorApp.whiteColor,
                   itemBuilder: (context) {
-                  return [
-                    const PopupMenuItem(value: "New Group",child: Text("New Group"),),
-                    const PopupMenuItem(value: "New broadcast",child: Text("New broadcast"),),
-                    const PopupMenuItem(value: "Whatsapp Web",child: Text("Whatsapp Web"),),
-                    const PopupMenuItem(value: "Start message",child: Text("Start message"),),
-                    const PopupMenuItem(value: "Settings",child: Text("Settings"),),
+                    return [
+                      const PopupMenuItem(value: "New Group",child: Text("New Group"),),
+                      const PopupMenuItem(value: "New broadcast",child: Text("New broadcast"),),
+                      const PopupMenuItem(value: "Whatsapp Web",child: Text("Whatsapp Web"),),
+                      const PopupMenuItem(value: "Start message",child: Text("Start message"),),
+                      const PopupMenuItem(value: "Settings",child: Text("Settings"),),
 
 
 
 
-                  ];
-                },)
+                    ];
+                  },)
               ],
               bottom: TabBar(
                 controller: cubit.controller,
@@ -96,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             body: TabBarView(
               controller: cubit.controller,
               children: const [
-               CameraScreen(),
+                CameraScreen(),
                 ChatPage(),
                 Center(child: Text('Status')),
                 Center(child: Text('Calls')),
@@ -105,7 +106,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           );
         },
       ),
-),
-    );
+);
   }
 }

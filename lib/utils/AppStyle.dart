@@ -8,6 +8,10 @@ class AppStyle{
     color: ColorApp.whiteColor,
     fontWeight: FontWeight.bold
   );
+  static TextStyle hintTextCamera = TextStyle(
+      fontSize: 17,
+      color: ColorApp.whiteColor,
+  );
   static TextStyle nameCustomCard = const TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.bold
@@ -22,5 +26,12 @@ class AppStyle{
   );
   static TextStyle textCamera =  TextStyle(
       color: ColorApp.whiteColor,
+  );
+  static TextStyle chat =  TextStyle(
+    fontSize: 17
+  );
+  static TextStyle doneMessage =  TextStyle(
+      fontSize: 13,
+    color: Colors.grey[600]
   );
 }

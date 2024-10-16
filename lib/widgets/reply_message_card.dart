@@ -1,0 +1,40 @@
+import 'package:chatappclone/utils/AppStyle.dart';
+import 'package:chatappclone/utils/color.dart';
+import 'package:chatappclone/utils/constant.dart';
+import 'package:flutter/material.dart';
+
+class ReplayMessageCard extends StatelessWidget {
+  const ReplayMessageCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: context.screenSize.width - 45,
+        ),
+        child: Card(
+          elevation: 1,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          //color: ColorApp.cardChat,
+          margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 10.0, right: 60.0, top: 5.0, bottom: 20.0),
+                child: Text("Hey", style: AppStyle.chat),
+              ),
+              Positioned(
+                bottom: 4,
+                right: 10,
+                child: Text("20:57", style: AppStyle.chat),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
