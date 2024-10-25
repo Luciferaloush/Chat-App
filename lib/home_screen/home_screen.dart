@@ -8,15 +8,27 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../model/chat_model.dart';
+import '../screen/status/status_screen.dart';
+
 class HomeScreen extends StatefulWidget {
-   static const String routeName = '/';
-  const HomeScreen({super.key});
+  static const String routeName = '/home-screen';
+
+  const HomeScreen({
+    super.key,
+    required this.chats,
+    required this.sourceChat,
+  });
+
+  final List<Chat> chats;
+  final Chat sourceChat;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late HomeScreenCubit cubit;
 
   @override
@@ -34,15 +46,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-  providers: [
-    BlocProvider.value(
-      value: cubit,
-),
-    BlocProvider(
-      create: (context) => CameraCubit(),
-    ),
-  ],
-  child: BlocConsumer<HomeScreenCubit, HomeScreenState>(
+      providers: [
+        BlocProvider.value(
+          value: cubit,
+        ),
+        BlocProvider(
+          create: (context) => CameraCubit(),
+        ),
+      ],
+      child: BlocConsumer<HomeScreenCubit, HomeScreenState>(
         listener: (context, state) {
           // TODO: implement listener
         },
@@ -60,35 +72,52 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   icon: Icon(Icons.search_outlined, color: ColorApp.whiteColor),
                 ),
                 PopupMenuButton<String>(
-                  onSelected: (value){
+                  onSelected: (value) {
                     if (kDebugMode) {
                       print(value);
                     }
-
                   },
                   color: ColorApp.whiteColor,
                   itemBuilder: (context) {
                     return [
-                      const PopupMenuItem(value: "New Group",child: Text("New Group"),),
-                      const PopupMenuItem(value: "New broadcast",child: Text("New broadcast"),),
-                      const PopupMenuItem(value: "Whatsapp Web",child: Text("Whatsapp Web"),),
-                      const PopupMenuItem(value: "Start message",child: Text("Start message"),),
-                      const PopupMenuItem(value: "Settings",child: Text("Settings"),),
-
-
-
-
+                      const PopupMenuItem(
+                        value: "New Group",
+                        child: Text("New Group"),
+                      ),
+                      const PopupMenuItem(
+                        value: "New broadcast",
+                        child: Text("New broadcast"),
+                      ),
+                      const PopupMenuItem(
+                        value: "Whatsapp Web",
+                        child: Text("Whatsapp Web"),
+                      ),
+                      const PopupMenuItem(
+                        value: "Start message",
+                        child: Text("Start message"),
+                      ),
+                      const PopupMenuItem(
+                        value: "Settings",
+                        child: Text("Settings"),
+                      ),
                     ];
-                  },)
+                  },
+                )
               ],
               bottom: TabBar(
                 controller: cubit.controller,
-                labelColor:ColorApp.whiteColor,
+                labelColor: ColorApp.whiteColor,
                 unselectedLabelColor: ColorApp.unSelectedTabColor,
                 indicatorColor: ColorApp.whiteColor,
-                tabs:  [
-                  Tab(icon: Icon(Icons.camera_alt,color: ColorApp.whiteColor,)),
-                  const Tab(text: "CHATS",),
+                tabs: [
+                  Tab(
+                      icon: Icon(
+                    Icons.camera_alt,
+                    color: ColorApp.whiteColor,
+                  )),
+                  const Tab(
+                    text: "CHATS",
+                  ),
                   const Tab(text: "STATUS"),
                   const Tab(text: "CALLS"),
                 ],
@@ -96,16 +125,19 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             ),
             body: TabBarView(
               controller: cubit.controller,
-              children: const [
-                CameraScreen(),
-                ChatPage(),
-                Center(child: Text('Status')),
-                Center(child: Text('Calls')),
+              children: [
+                const CameraScreen(),
+                ChatPage(
+                  chats: widget.chats,
+                  sourceChat: widget.sourceChat,
+                ),
+                const StatusScreen(),
+                const Center(child: Text('Calls')),
               ],
             ),
           );
         },
       ),
-);
+    );
   }
 }

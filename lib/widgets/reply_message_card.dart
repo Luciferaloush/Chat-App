@@ -4,8 +4,9 @@ import 'package:chatappclone/utils/constant.dart';
 import 'package:flutter/material.dart';
 
 class ReplayMessageCard extends StatelessWidget {
-  const ReplayMessageCard({super.key});
-
+  const ReplayMessageCard({super.key, required this.message, required this.time});
+final String message;
+final String time;
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -24,12 +25,12 @@ class ReplayMessageCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(
                     left: 10.0, right: 60.0, top: 5.0, bottom: 20.0),
-                child: Text("Hey", style: AppStyle.chat),
+                child: Text(message, style: AppStyle.chat),
               ),
               Positioned(
                 bottom: 4,
                 right: 10,
-                child: Text("20:57", style: AppStyle.chat),
+                child: Text(time, style: AppStyle.chat),
               ),
             ],
           ),

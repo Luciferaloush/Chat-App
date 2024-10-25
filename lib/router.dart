@@ -1,9 +1,16 @@
 import 'package:chatappclone/home_screen/home_screen.dart';
+import 'package:chatappclone/screen/auth/login.dart';
 import 'package:chatappclone/screen/camera/camera_screen.dart';
 import 'package:chatappclone/screen/camera/camera_view.dart';
 import 'package:chatappclone/screen/camera/video_view.dart';
+import 'package:chatappclone/screen/chat_page/chat_page.dart';
 import 'package:chatappclone/screen/contact/contact_screen.dart';
+import 'package:chatappclone/screen/country/country_screen.dart';
 import 'package:chatappclone/screen/individual_screen/individual_page.dart';
+import 'package:chatappclone/screen/landing/landing_screen.dart';
+import 'package:chatappclone/screen/login/login_screen.dart';
+import 'package:chatappclone/screen/status/status_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'model/chat_model.dart';
@@ -13,20 +20,31 @@ import 'screen_does_not_exist.dart';
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
     case IndividualPage.routeName:
-      final chat = routeSettings.arguments as Chat?;
-      if (chat == null) {
-        return MaterialPageRoute(
-          builder: (_) => const ScreenDoesNotExist(),
-        );
-      }
+      final args = routeSettings.arguments as Map<String, dynamic>?;
+      final chats = args?['chats'] as Chat?;
+      final sourceChat = args?['sourceChat'] as Chat?;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => IndividualPage(chat: chat),
+        builder: (_) => IndividualPage(chat: chats!, sourceChat: sourceChat!),
       );
     case HomeScreen.routeName:
+      final args = routeSettings.arguments as Map<String, dynamic>?;
+      final chats = args?['chats'] as List<Chat>?;
+      final sourceChat = args?['sourceChat'] as Chat?;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const HomeScreen(),
+        builder: (_) => HomeScreen(
+          chats: chats!,
+          sourceChat: sourceChat!,
+        ),
+      );
+    case ChatPage.routeName:
+      final args = routeSettings.arguments as Map<String, dynamic>?;
+      final chats = args?['chats'] as List<Chat>?;
+      final sourceChat = args?['sourceChat'] as Chat?;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => ChatPage(chats: chats!, sourceChat: sourceChat!),
       );
     case ContactScreen.routeName:
       return MaterialPageRoute(
@@ -54,6 +72,31 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => VideoView(path: path),
+      );
+    case LoginScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const LoginScreen(),
+      );
+    case CountryScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const CountryScreen(),
+      );
+    case StatusScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const StatusScreen(),
+      );
+    case LoginPage.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const LoginPage(),
+      );
+    case LandingScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const LandingScreen(),
       );
 
     default:

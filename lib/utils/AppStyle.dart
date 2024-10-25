@@ -8,9 +8,25 @@ class AppStyle{
     color: ColorApp.whiteColor,
     fontWeight: FontWeight.bold
   );
+  static TextStyle customBottom = TextStyle(
+      fontSize: 18,
+      color: ColorApp.whiteColor,
+      fontWeight: FontWeight.bold
+  );
+  static TextStyle loginPage = TextStyle(
+      fontSize: 18,
+      wordSpacing: 1,
+      color: Colors.teal,
+      fontWeight: FontWeight.w700
+  );
   static TextStyle hintTextCamera = TextStyle(
       fontSize: 17,
       color: ColorApp.whiteColor,
+  );
+  static TextStyle styleLanding = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: ColorApp.primaryColor,
   );
   static TextStyle nameCustomCard = const TextStyle(
     fontSize: 16,

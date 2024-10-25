@@ -5,7 +5,8 @@ class Chat {
   final String time;
   final String currentMessage;
   final String status;
-    bool isSelect;
+  bool isSelect;
+   int id;
 
   Chat(
       {required this.name,
@@ -15,5 +16,6 @@ class Chat {
       required this.currentMessage,
       required this.status,
         this.isSelect = false,
+        this.id = 0,
       });
 }

@@ -7,15 +7,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../model/chat_model.dart';
 
 class CustomCard extends StatelessWidget {
-  const CustomCard({super.key, required this.chat});
+  const CustomCard({super.key, required this.chat, required this.sourceChat});
 
   final Chat chat;
+  final Chat sourceChat;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, IndividualPage.routeName, arguments:chat);
+        Navigator.pushNamed(context, IndividualPage.routeName, arguments: {
+          "chats": chat,
+          "sourceChat": sourceChat,
+        });
       },
       child: Column(
         children: [

@@ -4,8 +4,9 @@ import 'package:chatappclone/utils/constant.dart';
 import 'package:flutter/material.dart';
 
 class OwnMessageCard extends StatelessWidget {
-  const OwnMessageCard({super.key});
-
+  const OwnMessageCard({super.key, required this.message, required this.time});
+  final String message;
+  final String time;
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -22,14 +23,14 @@ class OwnMessageCard extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 60.0, top: 5.0, bottom: 20.0),
-              child: Text("Hey",style: AppStyle.chat),
+              child: Text(message,style: AppStyle.chat),
             ),
             Positioned(
               bottom: 4,
               right: 10,
               child: Row(
                 children: [
-                  Text("20:57",style: AppStyle.chat),
+                  Text(time,style: AppStyle.chat),
                   SizedBox(width: 5,),
                   Icon(Icons.done_all, size: 20,)
                 ],
