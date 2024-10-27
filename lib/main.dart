@@ -34,17 +34,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       onGenerateRoute: generateRoute,
       initialRoute: '/',
-      home: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => CountryCubit(),
-          ),
-          BlocProvider(
-            create: (context) => AuthCubit(),
-          ),
-        ],
-        child: const LoginPage(),
-      )
+      // home: MultiBlocProvider(
+      //   providers: [
+      //     BlocProvider(
+      //       create: (context) => CountryCubit(),
+      //     ),
+      //     BlocProvider(
+      //       create: (context) => AuthCubit(),
+      //     ),
+      //   ],
+      //   child: const LoginPage(),
+      // )
+      home: LoginScreen()
     );
   }
 }

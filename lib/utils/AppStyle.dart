@@ -8,6 +8,10 @@ class AppStyle{
     color: ColorApp.whiteColor,
     fontWeight: FontWeight.bold
   );
+  static TextStyle teal =   const TextStyle(
+  color: Colors.teal,
+  fontSize: 16.5
+  );
   static TextStyle customBottom = TextStyle(
       fontSize: 18,
       color: ColorApp.whiteColor,

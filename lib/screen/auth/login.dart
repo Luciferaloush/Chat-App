@@ -1,12 +1,12 @@
 import 'package:chatappclone/screen/auth/cubit/auth_cubit.dart';
 import 'package:chatappclone/screen/country/cubit/country_cubit.dart';
+import 'package:chatappclone/screen/otp/otp_screen.dart';
 import 'package:chatappclone/utils/AppStyle.dart';
 import 'package:chatappclone/utils/color.dart';
 import 'package:chatappclone/utils/constant.dart';
 import 'package:chatappclone/utils/text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path/path.dart';
 
 import '../../model/country.dart';
 import '../country/country_screen.dart';
@@ -19,6 +19,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: ColorApp.whiteColor,
       appBar: AppBar(
         backgroundColor: ColorApp.whiteColor,
         elevation: 0,
@@ -77,19 +78,27 @@ class LoginPage extends StatelessWidget {
             ),
             number(context, cubit.selectedCountry, authCubit.number),
             Expanded(child: Container()),
-            Container(
-              color: Colors.tealAccent[400],
-              height: 40,
-              width: 70,
-              child: Center(
-                child: Text(
-                  "NEXT",style: TextStyle(
-                  fontWeight: FontWeight.w800
-                ),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, OtpScreen.routeName, arguments: {
+                  "number": authCubit.number.text.trim(),
+                  "countryCode":cubit.selectedCountry.code
+                });
+              },
+              child: Container(
+                color: Colors.tealAccent[400],
+                height: 40,
+                width: 70,
+                child: const Center(
+                  child: Text(
+                    "NEXT",style: TextStyle(
+                    fontWeight: FontWeight.w800
+                  ),
+                  ),
                 ),
               ),
             ),
-            SizedBox(height: 40,),
+            const SizedBox(height: 40,),
 
           ],
         )
@@ -105,12 +114,12 @@ class LoginPage extends StatelessWidget {
     return Container(
       width: context.screenSize.width / 1.5,
       height: 38,
-      padding: EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
           Container(
             width: 70,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(
                   width: 1.8,
@@ -120,22 +129,22 @@ class LoginPage extends StatelessWidget {
             ),
             child: Row(
               children: [
-                SizedBox(width: 10,),
-                Text("+",style: TextStyle(
+                const SizedBox(width: 10,),
+                const Text("+",style: TextStyle(
                     fontSize: 18
                 )),
-                Text(country.code.substring(1), style: TextStyle(
-                  fontSize: 18
+                Text(country.code.substring(1), style: const TextStyle(
+                  fontSize: 16
                 ),),
-                SizedBox(width: 15,),
+                const SizedBox(width: 15,),
 
               ],
             ),
           ),
-          SizedBox(width: 30,),
+          const SizedBox(width: 30,),
           Container(
             width: context.screenSize.width / 1.5 - 100,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 border: Border(
                     bottom: BorderSide(
                         width: 1.8,
@@ -146,7 +155,7 @@ class LoginPage extends StatelessWidget {
             child: TextFormField(
               controller: controller,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.all(12),
                 hintText: "Phone number",

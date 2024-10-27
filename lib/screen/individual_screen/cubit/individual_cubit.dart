@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../../model/message.dart';
@@ -12,7 +13,9 @@ class IndividualCubit extends Cubit<IndividualState> {
 
   static IndividualCubit get(context) => BlocProvider.of(context);
   IO.Socket? socket;
+  ImagePicker picker = ImagePicker();
   bool sendButton = false;
+  XFile? file;
   final List<Message> messageList = [];
   TextEditingController messageController = TextEditingController();
   ScrollController scrollController = ScrollController();
@@ -38,28 +41,33 @@ class IndividualCubit extends Cubit<IndividualState> {
       print("Connected");
       socket!.on("message", (msg) {
         print(msg);
-        setMessage("destination", msg["message"]);
+        setMessage("destination", msg["message"], msg['path']);
         scrollController.animateTo(
           scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
       });
-
     });
     print(socket!.connected);
   }
 
-  void sendMessage(String message, int sourceId, int targetId) {
-    setMessage("source", message);
-    socket!.emit("message",
-        {"message": message, "sourceId": sourceId, "targetId": targetId});
-
+  void sendMessage(String message, int sourceId, int targetId, String path) {
+    setMessage("source", message, path);
+    socket!.emit("message", {
+      "message": message,
+      "sourceId": sourceId,
+      "targetId": targetId,
+      "path": path
+    });
   }
 
-  void setMessage(String type, String message) {
-    Message messages =
-        Message(type: type, message: message, time: DateTime.now().toString().substring(10, 16));
+  void setMessage(String type, String message, String path) {
+    Message messages = Message(
+        type: type,
+        message: message,
+        time: DateTime.now().toString().substring(10, 16),
+        path: path);
     messageList.add(messages);
     emit(SetMessage());
   }

@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 
 import 'model/chat_model.dart';
 import 'screen/create_group/creat_group_screen.dart';
+import 'screen/otp/otp_screen.dart';
 import 'screen_does_not_exist.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -45,6 +46,14 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => ChatPage(chats: chats!, sourceChat: sourceChat!),
+      );
+    case OtpScreen.routeName:
+      final args = routeSettings.arguments as Map<String, dynamic>?;
+      final number = args?['number'] as String?;
+      final countryCode = args?['countryCode'] as String?;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => OtpScreen(number: number!, countryCode: countryCode!),
       );
     case ContactScreen.routeName:
       return MaterialPageRoute(
