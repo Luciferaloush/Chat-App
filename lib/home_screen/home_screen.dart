@@ -2,12 +2,16 @@ import 'package:chatappclone/home_screen/cubit/home_screen_cubit.dart';
 import 'package:chatappclone/screen/camera/camera_screen.dart';
 import 'package:chatappclone/screen/camera/cubit/camera_cubit.dart';
 import 'package:chatappclone/screen/chat_page/chat_page.dart';
+import 'package:chatappclone/screen/individual_screen/cubit/individual_cubit.dart';
+import '../model/auth/users.dart';
+import '../screen/users/users.dart';
 import 'package:chatappclone/utils/AppStyle.dart';
 import 'package:chatappclone/utils/color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../model/auth/user.dart';
 import '../model/chat_model.dart';
 import '../screen/status/status_screen.dart';
 
@@ -16,12 +20,12 @@ class HomeScreen extends StatefulWidget {
 
   const HomeScreen({
     super.key,
-    required this.chats,
+    // required this.chats,
     required this.sourceChat,
   });
 
-  final List<Chat> chats;
-  final Chat sourceChat;
+//  final List<Users> chats;
+  final User sourceChat;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -52,6 +56,9 @@ class _HomeScreenState extends State<HomeScreen>
         ),
         BlocProvider(
           create: (context) => CameraCubit(),
+        ),
+        BlocProvider(
+          create: (context) => IndividualCubit(),
         ),
       ],
       child: BlocConsumer<HomeScreenCubit, HomeScreenState>(
@@ -112,27 +119,39 @@ class _HomeScreenState extends State<HomeScreen>
                 tabs: [
                   Tab(
                       icon: Icon(
-                    Icons.camera_alt,
-                    color: ColorApp.whiteColor,
-                  )),
+                        Icons.camera_alt,
+                        color: ColorApp.whiteColor,
+                      )),
                   const Tab(
                     text: "CHATS",
                   ),
                   const Tab(text: "STATUS"),
-                  const Tab(text: "CALLS"),
+                  const Tab(text: "USERS"),
                 ],
               ),
             ),
             body: TabBarView(
               controller: cubit.controller,
               children: [
-                const CameraScreen(),
+                BlocConsumer<IndividualCubit, IndividualState>(
+                  listener: (context, state) {
+                    // TODO: implement listener
+                  },
+                  builder: (context, state) {
+                    IndividualCubit cubit = IndividualCubit.get(context);
+                    // return CameraScreen(
+                    //   onImageSend: cubit.onImageSend,
+                    //
+                    // );
+                    return Container();
+                  },
+                ),
                 ChatPage(
-                  chats: widget.chats,
+
                   sourceChat: widget.sourceChat,
                 ),
                 const StatusScreen(),
-                const Center(child: Text('Calls')),
+                 UsersPage(user: widget.sourceChat),
               ],
             ),
           );

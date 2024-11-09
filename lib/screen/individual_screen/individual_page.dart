@@ -14,19 +14,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../model/auth/user.dart';
+import '../../model/auth/users.dart';
 import '../../model/chat_model.dart';
 import '../../utils/AppStyle.dart';
 import '../../utils/color.dart';
 import '../../widgets/bottom_chet.dart';
 
 class IndividualPage extends StatefulWidget {
-  const IndividualPage(
-      {super.key, required this.chat, required this.sourceChat});
+  const IndividualPage({
+    super.key,
+    required this.chat,
+    required this.sourceChat,
+  });
 
   static const routeName = '/individual';
-
-  final Chat chat;
-  final Chat sourceChat;
+  final Users chat;
+  final User sourceChat;
 
   @override
   State<IndividualPage> createState() => _IndividualPageState();
@@ -35,9 +39,17 @@ class IndividualPage extends StatefulWidget {
 class _IndividualPageState extends State<IndividualPage> {
   @override
   Widget build(BuildContext context) {
+    print(widget.sourceChat.id);
     bool show = false;
     return BlocProvider(
-      create: (context) => IndividualCubit()..connect(widget.sourceChat.id),
+      create: (context) {
+        IndividualCubit cubit = IndividualCubit()
+          ..getChat(
+              userId: widget.sourceChat.id.toString(),
+              targetId: widget.chat.sId.toString());
+        cubit.connect(widget.sourceChat.id.toString(), widget.chat.sId.toString());
+        return cubit;
+      },
       child: BlocConsumer<IndividualCubit, IndividualState>(
         listener: (context, state) {
           // TODO: implement listener
@@ -68,7 +80,7 @@ class _IndividualPageState extends State<IndividualPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.chat.name,
+                              widget.chat.name.toString(),
                               style: AppStyle.appBarStyle,
                             ),
                             Text(
@@ -99,9 +111,10 @@ class _IndividualPageState extends State<IndividualPage> {
                           radius: 20,
                           backgroundColor: ColorApp.circleAvatar,
                           child: SvgPicture.asset(
-                            widget.chat.isGroup
-                                ? "assets/svg_icon/groups_36dp_5F6368.svg"
-                                : "assets/svg_icon/person_36dp_000000.svg",
+                            // widget.chat.isGroup
+                            //     ? "assets/svg_icon/groups_36dp_5F6368.svg"
+                            //     :
+                            "assets/svg_icon/person_36dp_000000.svg",
                             color: ColorApp.whiteColor,
                             height: 37,
                             width: 37,
@@ -165,26 +178,43 @@ class _IndividualPageState extends State<IndividualPage> {
                       Expanded(
                         child: ListView.builder(
                           controller: cubit.scrollController,
-                          itemCount: cubit.messageList.length + 1,
+                          itemCount: cubit.allChat.length + 1,
                           itemBuilder: (context, index) {
-                            if (index == cubit.messageList.length) {
-                              return const SizedBox(
-                                  height: 70); // Space at the bottom
+                            if (index == cubit.allChat.length) {
+                              return const SizedBox(height: 70); // Space at the bottom
                             }
-                            final message = cubit.messageList[index];
-                            return message.type == "source"
-                                ? OwnMessageCard(
-                                    message: message.message,
-                                    time: message.time,
-                                  )
-                                : ReplayMessageCard(
-                                    message: message.message,
-                                    time: message.time);
+                            final message = cubit.allChat[index];
+                            bool isSender = message.isSender ?? false;
+
+                            if (isSender) {
+                              if (message.path!.isNotEmpty) {
+                                return OwnFileCard(
+                                  path: message.path.toString(),
+                                  message: message.message.toString(),
+                                  time: message.timestamp.toString(),
+                                );
+                              } else {
+                                return OwnMessageCard(
+                                  message: message.message.toString(),
+                                  time: message.timestamp.toString(),
+                                );
+                              }
+                            } else {
+                              if (message.path!.isNotEmpty) {
+                                return ReplyFileCard(
+                                  path: message.path.toString(),
+                                  message: message.message.toString(),
+                                  time: message.timestamp.toString(),
+                                );
+                              }
+                              return ReplayMessageCard(
+                                message: message.message.toString(),
+                                time: message.timestamp.toString(),
+                              );
+                            }
                           },
                         ),
-
-                      ),
-                      Align(
+                      ),                      Align(
                         alignment: Alignment.bottomCenter,
                         child: SizedBox(
                           height: 70,
@@ -237,12 +267,24 @@ class _IndividualPageState extends State<IndividualPage> {
                                                       return BottomChet(
                                                         onTap: () {},
                                                         onTap2: () {
+                                                          cubit.setPopTime(3);
                                                           Navigator.pushNamed(
                                                               context,
                                                               CameraScreen
-                                                                  .routeName);
+                                                                  .routeName,
+                                                              arguments: {
+                                                                // "onImageSend":widget.onImageSend,
+                                                                "sourceChat": widget
+                                                                    .sourceChat
+                                                                    .id
+                                                                    .toString(),
+                                                                "chats": widget
+                                                                    .chat.sId
+                                                                    .toString()
+                                                              });
                                                         },
                                                         onTap3: () async {
+                                                          cubit.setPopTime(2);
                                                           cubit.file = await cubit
                                                               .picker
                                                               .pickImage(
@@ -269,8 +311,16 @@ class _IndividualPageState extends State<IndividualPage> {
                                               ),
                                               IconButton(
                                                 onPressed: () {
+                                                  cubit.setPopTime(2);
                                                   Navigator.pushNamed(context,
-                                                      CameraScreen.routeName);
+                                                      CameraScreen.routeName,
+                                                      arguments: {
+                                                        "onImageSend":
+                                                            cubit.onImageSend,
+                                                        "sourceChat":
+                                                            widget.sourceChat,
+                                                        "chats": widget.chat
+                                                      });
                                                 },
                                                 icon: Icon(Icons.camera_alt,
                                                     color:
@@ -303,11 +353,10 @@ class _IndividualPageState extends State<IndividualPage> {
                                           );
                                           if (cubit.sendButton) {
                                             cubit.sendMessage(
-                                              cubit.messageController.text,
-                                              widget.sourceChat.id,
-                                              widget.chat.id,
-                                              ""
-                                            );
+                                                cubit.messageController.text,
+                                                widget.sourceChat.id.toString(),
+                                                widget.chat.sId.toString(),
+                                                cubit.file?.path ?? '');
                                             cubit.messageController.clear();
                                             setState(() {
                                               cubit.sendButton = false;
@@ -336,81 +385,6 @@ class _IndividualPageState extends State<IndividualPage> {
             ],
           );
         },
-      ),
-    );
-  }
-
-  Widget bottomChet() {
-    return SizedBox(
-      height: 278,
-      width: MediaQuery.of(context).size.width,
-      child: Card(
-        margin: const EdgeInsets.all(18.0),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  icon(Icons.insert_drive_file, Colors.indigo, "Document",
-                      () {}),
-                  const SizedBox(
-                    width: 40,
-                  ),
-                  icon(Icons.camera_alt, Colors.pink, "Camera", () {}),
-                  const SizedBox(
-                    width: 40,
-                  ),
-                  icon(Icons.insert_photo, Colors.purple, "Gallery", () {}),
-                ],
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  icon(Icons.headset, Colors.orange, "Audio", () {}),
-                  const SizedBox(
-                    width: 40,
-                  ),
-                  icon(Icons.location_on, ColorApp.accentColor, "Location",
-                      () {}),
-                  const SizedBox(
-                    width: 40,
-                  ),
-                  icon(Icons.person, Colors.blue, "Contact", () {}),
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget icon(IconData? icon, Color? color, String? title, Function()? onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: color,
-            child: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  icon,
-                  color: ColorApp.whiteColor,
-                  size: 29,
-                )),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Text(title!)
-        ],
       ),
     );
   }

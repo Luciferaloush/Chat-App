@@ -1,23 +1,28 @@
+import 'package:chatappclone/model/reciver.dart';
 import 'package:chatappclone/screen/individual_screen/individual_page.dart';
 import 'package:chatappclone/utils/AppStyle.dart';
 import 'package:chatappclone/utils/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../model/auth/user.dart';
+import '../model/auth/users.dart';
 import '../model/chat_model.dart';
+import '../model/message.dart';
 
 class CustomCard extends StatelessWidget {
-  const CustomCard({super.key, required this.chat, required this.sourceChat});
+  const CustomCard({super.key, required this.receiver, required this.sourceChat, required this.messages});
 
-  final Chat chat;
-  final Chat sourceChat;
+  final ReceiverId receiver;
+  final User sourceChat;
+  final Messages messages;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, IndividualPage.routeName, arguments: {
-          "chats": chat,
+          "chats": receiver,
           "sourceChat": sourceChat,
         });
       },
@@ -27,11 +32,11 @@ class CustomCard extends StatelessWidget {
             leading: CircleAvatar(
               radius: 30,
               backgroundColor: ColorApp.circleAvatar,
-              child: SvgPicture.asset(chat.icon, height: 37, width: 37),
+              child: SvgPicture.asset("", height: 37, width: 37),
             ),
-            trailing: Text(chat.time),
+            trailing: Text(messages.timestamp.toString()),
             title: Text(
-              chat.name,
+              receiver.name.toString(),
               style: AppStyle.nameCustomCard,
             ),
             subtitle: Row(
@@ -41,7 +46,7 @@ class CustomCard extends StatelessWidget {
                   width: 3,
                 ),
                 Text(
-                  chat.currentMessage,
+                 messages.message.toString(),
                   style: AppStyle.nameCustomCard
                       .copyWith(fontSize: 13, fontWeight: FontWeight.normal),
                 ),

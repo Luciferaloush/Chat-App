@@ -1,13 +1,18 @@
+import 'package:chatappclone/helper/cache_helper.dart';
+import 'package:chatappclone/home_screen/home_screen.dart';
 import 'package:chatappclone/screen/auth/cubit/auth_cubit.dart';
 import 'package:chatappclone/screen/country/cubit/country_cubit.dart';
+import 'package:chatappclone/screen/login/login_screen.dart';
 import 'package:chatappclone/screen/otp/otp_screen.dart';
 import 'package:chatappclone/utils/AppStyle.dart';
 import 'package:chatappclone/utils/color.dart';
 import 'package:chatappclone/utils/constant.dart';
 import 'package:chatappclone/utils/text.dart';
+import 'package:chatappclone/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../model/auth/user.dart';
 import '../../model/country.dart';
 import '../country/country_screen.dart';
 
@@ -41,6 +46,17 @@ class LoginPage extends StatelessWidget {
       body: BlocConsumer<AuthCubit, AuthState>(
   listener: (context, state) {
     // TODO: implement listener
+    if(state is RegisterSuccess){
+      User user = state.user;
+      print(user.id);
+      Navigator.pushNamed(context, HomeScreen.routeName, arguments: {
+        "sourceChat":user
+      });
+      print("SAVED: ${CacheHelper.getData(key: "token")}");
+    }
+    if(state is RegisterError){
+      print("Register error");
+    }
   },
   builder: (context, state) {
     AuthCubit authCubit = AuthCubit.get(context);
@@ -72,11 +88,15 @@ class LoginPage extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
+            CustomTextField(width: context.screenSize.width / 1.5 , controller: authCubit.name, hintText: "enter your name"),
+            CustomTextField(width: context.screenSize.width / 1.5, controller: authCubit.email, hintText: "enter your email"),
             countryCard(context, cubit.selectedCountry),
             const SizedBox(
               height: 15,
             ),
             number(context, cubit.selectedCountry, authCubit.number),
+            CustomTextField(width: context.screenSize.width / 1.5 , controller: authCubit.password, hintText: "enter your password"),
+
             Expanded(child: Container()),
             InkWell(
               onTap: () {
@@ -85,15 +105,20 @@ class LoginPage extends StatelessWidget {
                   "countryCode":cubit.selectedCountry.code
                 });
               },
-              child: Container(
-                color: Colors.tealAccent[400],
-                height: 40,
-                width: 70,
-                child: const Center(
-                  child: Text(
-                    "NEXT",style: TextStyle(
-                    fontWeight: FontWeight.w800
-                  ),
+              child: InkWell(
+                onTap: () {
+                  authCubit.register();
+                },
+                child: Container(
+                  color: Colors.tealAccent[400],
+                  height: 40,
+                  width: 70,
+                  child: const Center(
+                    child: Text(
+                      "NEXT",style: TextStyle(
+                      fontWeight: FontWeight.w800
+                    ),
+                    ),
                   ),
                 ),
               ),

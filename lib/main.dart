@@ -1,7 +1,9 @@
 import 'package:camera/camera.dart';
+import 'package:chatappclone/helper/cache_helper.dart';
 import 'package:chatappclone/router.dart';
 import 'package:chatappclone/screen/auth/cubit/auth_cubit.dart';
 import 'package:chatappclone/screen/auth/login.dart';
+import 'package:chatappclone/screen/camera/cubit/camera_cubit.dart';
 import 'package:chatappclone/screen/country/cubit/country_cubit.dart';
 import 'package:chatappclone/screen/landing/landing_screen.dart';
 import 'package:chatappclone/screen/login/cubit/login_cubit.dart';
@@ -14,7 +16,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Constants.cameras = await availableCameras();
-  runApp(const MyApp());
+  await CacheHelper.init();
+  runApp(
+      BlocProvider(create: (context) => CameraCubit(),child:  MyApp()),
+     );
 }
 
 class MyApp extends StatelessWidget {
@@ -34,18 +39,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       onGenerateRoute: generateRoute,
       initialRoute: '/',
-      // home: MultiBlocProvider(
-      //   providers: [
-      //     BlocProvider(
-      //       create: (context) => CountryCubit(),
-      //     ),
-      //     BlocProvider(
-      //       create: (context) => AuthCubit(),
-      //     ),
-      //   ],
-      //   child: const LoginPage(),
-      // )
-      home: LoginScreen()
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => CountryCubit(),
+          ),
+          BlocProvider(
+            create: (context) => AuthCubit(),
+          ),
+        ],
+        child: const LoginPage(),
+      )
+      // home: LoginScreen()
     );
   }
 }

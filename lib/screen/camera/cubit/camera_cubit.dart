@@ -21,6 +21,7 @@ class CameraCubit extends Cubit<CameraState> {
   Future<void>? cameraVoid;
   bool isRecording = false;
   VideoPlayerController? videoPlayerController;
+  TextEditingController imageDescription = TextEditingController();
 
   Future<void> init() async {
     try {
@@ -58,14 +59,15 @@ class CameraCubit extends Cubit<CameraState> {
     await cameraController!.dispose();
   }
 
-  Future<void> takePhoto(BuildContext context) async {
+  Future<void> takePhoto(BuildContext context, Function onImageSend, String sourceId, String targetId) async {
     try {
-      // final directory = Directory.systemTemp;
-      // final path = join(directory.path, "${DateTime.now()}.png");
-     // final image = await cameraController!.takePicture();
-      //await image.saveTo(path);
       XFile path = await cameraController!.takePicture();
-      Navigator.pushNamed(context, CameraView.routeName, arguments: path.path);
+      Navigator.pushNamed(context, CameraView.routeName, arguments: {
+      "path": path.path,
+        "onImageSend": onImageSend,
+        "sourceChat": sourceId,
+        "chats": targetId,
+      }, );
     } catch (e) {
       emit(CameraError(err: e.toString()));
     }

@@ -25,3 +25,4 @@ class VideoError extends CameraState {
 
   VideoError({required this.err});
 }
+class SetPopTime extends CameraState {}

@@ -1,16 +1,23 @@
 import 'package:camera/camera.dart';
+import 'package:chatappclone/model/auth/users.dart';
 import 'package:chatappclone/utils/AppStyle.dart';
 import 'package:chatappclone/utils/color.dart';
 import 'package:chatappclone/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../model/auth/user.dart';
+import '../../model/chat_model.dart';
 import 'cubit/camera_cubit.dart';
 
 class CameraScreen extends StatefulWidget {
-  const CameraScreen({super.key});
+   const CameraScreen({super.key, required this.chats, required this.sourceChat, required this.onImageSend,});
 
   static const routeName = '/camera_screen';
+
+  final Function onImageSend;
+   final User chats;
+   final Users sourceChat;
 
   @override
   _CameraScreenState createState() => _CameraScreenState();
@@ -22,7 +29,7 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   void initState() {
     super.initState();
-    cameraCubit = context.read<CameraCubit>();
+    cameraCubit = BlocProvider.of<CameraCubit>(context);
     cameraCubit.init();
   }
 
@@ -78,7 +85,9 @@ class _CameraScreenState extends State<CameraScreen> {
                              },
                              onTap: () {
                                if(!cubit.isRecording) {
-                                    cubit.takePhoto(context);
+                                 print('sourceChat: ${widget.sourceChat.sId}');
+                                 print('chats: ${widget.chats.id}');
+                                    cubit.takePhoto(context,widget.onImageSend, widget.sourceChat.sId.toString(),widget.chats.id.toString());
                                   }
                                 },
                              child: cubit.isRecording ? Icon(
